@@ -18,7 +18,7 @@ public class IdGenerator {
             // create id from characters
             duplicate = false;
             randomString.setLength(0);
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 6; i++) {
                 randomString.append(characters.charAt(random.nextInt(characters.length())));
             }
             // compare with existing ids, if duplicate repeat again
