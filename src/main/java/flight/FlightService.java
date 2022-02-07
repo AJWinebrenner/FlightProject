@@ -72,15 +72,20 @@ public record FlightService(FlightDao flightDao) {
     }
 
     public static String formatFlight(Flight flight) {
-        return flight.getFlightCode() + " | " + "Destination: " + flight.getDestination() + " | " + "Departure time: " + flight.getDepartureTime() + " | " + "Available seats: " + getAvailableSeats(flight);
+        if (flight != null) {
+            return flight.getFlightCode() + " | " + "Destination: " + flight.getDestination() + " | " + "Departure time: " + flight.getDepartureTime() + " | " + "Available seats: " + getAvailableSeats(flight);
+        } else {
+            return "There's nothing here";
+        }
     }
 
-    public void displayAllFlights() { // TODO use filter to display filtered instead?
-        for (Flight flight : flightDao.getAllFlights()) {
+    public void displayFlights(List<Flight> flights) { // TODO display list arg
+        for (Flight flight : flights) {
             System.out.println("--------------------");
             System.out.println(formatFlight(flight));
         }
         System.out.println("--------------------");
+        Interface.pause();
     }
 
     public void displayFullyBooked() {
@@ -92,6 +97,7 @@ public record FlightService(FlightDao flightDao) {
             }
         }
         System.out.println("--------------------");
+        Interface.pause();
     }
 
     public void addPassengerToFlight(Passenger passenger, Flight flight) {
@@ -112,27 +118,22 @@ public record FlightService(FlightDao flightDao) {
         return false;
     }
 
-    public void DisplayPassengerFlights(Passenger passenger) {
+    public void displayPassengerFlights(Passenger passenger) {
         List<Flight> onboard = new ArrayList<>();
         for (Flight flight : flightDao.getAllFlights()) {
             if (isOnFlight(passenger, flight)) {
                 onboard.add(flight);
             }
         }
-        System.out.println("Flights for passenger: " + passenger.getName());
-        if (onboard.size() > 0) {
-            for (Flight flight : onboard) {
-                System.out.println(formatFlight(flight));
-            }
-        } else {
-            System.out.println("No flights booked for " + passenger.getName() + ".");
-            bookOrDisplay(passenger);
+        System.out.println("Flights for " + passenger.getName() + ":");
+        if (onboard.size() == 0) {
+            onboard.add(null);
         }
-        System.out.println("---------------------");
+        displayFlights(onboard);
     }
 
-    public Flight getFlightByCode(String code) {
-        for (Flight f : flightDao.getAllFlights()) {
+    public Flight getFlightByCode(String code, List<Flight> flights) {
+        for (Flight f : flights) {
             if (code.equalsIgnoreCase(f.getFlightCode())) {
                 return f;
             }
@@ -140,71 +141,72 @@ public record FlightService(FlightDao flightDao) {
         return null;
     }
 
-    public void PromptCancelFlight() {
+    public void promptCancelFlight() { //TODO filter stores flight codes
         List<Flight> allFlights = flightDao.getAllFlights();
-        // TODO replace with filter
-        List<Integer> filterFlights = new ArrayList<>();
-        for (int i = 0; i < allFlights.size(); i++) {
-            Flight f = allFlights.get(i);
-            filterFlights.add(i);
+        List<String> filterCodes = new ArrayList<>(); // TODO replace with filter (currently does all)
+        for (Flight f : allFlights) {
+            filterCodes.add(f.getFlightCode());
         }
 
         // setup options
-        String[] options = new String[filterFlights.size() + 1];
-        for (int i = 0; i < filterFlights.size(); i++) {
-            Flight f = allFlights.get(i);
+        String[] options = new String[filterCodes.size() + 1];
+        for (int i = 0; i < filterCodes.size(); i++) {
+            Flight f = getFlightByCode(filterCodes.get(i), allFlights); //return flights from "allFlights" matching "filterCodes"
             options[i] = formatFlight(f);
         }
-        options[filterFlights.size()] = "back";
+        options[filterCodes.size()] = "back";
 
-        // cancel the flight and save list
+        // cancel the flight chosen and save list
         int option = Interface.getOption("Pick an available flight below:", options);
-        if (option <= filterFlights.size()) {
-            String code = allFlights.get(option - 1).getFlightCode();
-            allFlights.remove(option - 1);
+        if (option <= filterCodes.size()) {
+            String code = filterCodes.get(option - 1);
+            // TODO if (getInput("Type code to confirm:", "[A-Za-z0-9]+") == code);
+            allFlights.remove(getFlightByCode(code, allFlights));
             flightDao.updateAllFlights(allFlights);
             System.out.println("Flight " + code + " cancelled.");
-            displayAllFlights();
+
         }
     }
 
-    public void bookOrDisplay(Passenger p) { //TODO make into menu
-        String[] options = {"Book a flight for " + p.getName(), "Display booked flights for " + p.getName()};
-        int option = Interface.getOption("Would you like to:", options);
 
-        switch (option) {
-            case 1 -> PromptBookFlight(p);
-            case 2 -> DisplayPassengerFlights(p);
-        }
-    }
 
-    public void PromptBookFlight(Passenger p) {
+    public void promptBookFlight(Passenger p) {
         // get available flights TODO replace with filter
         List<Flight> allFlights = flightDao.getAllFlights();
-        List<Integer> availableFlights = new ArrayList<>();
-        for (int i = 0; i < allFlights.size(); i++) {
-            Flight f = allFlights.get(i);
+        List<Flight> availableFlights = new ArrayList<>();
+        for (Flight f : allFlights) {
             if (getAvailableSeats(f) > 0 && !isOnFlight(p, f)) {
-                availableFlights.add(i);
+                availableFlights.add(f);
             }
         }
+        List<String> filterCodes = new ArrayList<>(); // TODO replace with filter (currently does all available)
+        for (Flight f : availableFlights) {
+            filterCodes.add(f.getFlightCode());
+        }
+
         // cancel with no available options
-        if (availableFlights.size() == 0) {
+        if (filterCodes.size() == 0) {
             System.out.println("No available flights.");
         } else { // setup options
-            String[] options = new String[availableFlights.size() + 1];
-            for (int i = 0; i < availableFlights.size(); i++) {
-                Flight f = allFlights.get(i);
+            String[] options = new String[filterCodes.size() + 1];
+            for (int i = 0; i < filterCodes.size(); i++) {
+                Flight f = getFlightByCode(filterCodes.get(i), availableFlights); //return flights from "availableFlights" matching "filterCodes"
                 options[i] = formatFlight(f);
             }
-            options[availableFlights.size()] = "Back";
+            options[filterCodes.size()] = "Back";
 
             // book a flight and save list
             int option = Interface.getOption("Pick an available flight below:", options);
-            if (option <= availableFlights.size()) {
-                addPassengerToFlight(p, allFlights.get(option - 1));
-                flightDao.updateAllFlights(allFlights);
-                System.out.println("Flight booked for " + p.getName() + "!");
+            if (option <= filterCodes.size()) {
+                String code = filterCodes.get(option - 1);
+                Flight f = getFlightByCode(code, availableFlights);
+                if (f != null){
+                    addPassengerToFlight(p, f);
+                    flightDao.updateAllFlights(allFlights);
+                    System.out.println("Flight booked for " + p.getName() + "!");
+                } else {
+                    System.out.println("cannot find flight");
+                }
             }
         }
     }

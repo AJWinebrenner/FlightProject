@@ -6,13 +6,14 @@ import util.Interface;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public record PassengerService(PassengerDao passengerDao, FlightService flightService, IdGenerator idGenerator) {
 
     public Passenger getById(String id) {
         for (Passenger p : passengerDao.getAllPassengers()) {
-            if (id.equals(p.getId())) {
+            if (id.trim().equalsIgnoreCase(p.getId())) {
                 return p;
             }
         }
@@ -20,52 +21,48 @@ public record PassengerService(PassengerDao passengerDao, FlightService flightSe
     }
 
     public List<Passenger> filterByName(String name) { //TODO use index numbers to ref allPassengers in a list (return Int)
+        List<Passenger> allPassengers = passengerDao.getAllPassengers();
         List<Passenger> matched = new ArrayList<>();
-        for (Passenger p : passengerDao.getAllPassengers()) {
-            if (name.trim().equalsIgnoreCase(p.getName())) { // watch for trims
-                matched.add(p);
+        if (allPassengers.size() > 0) {
+            for (Passenger p : allPassengers) {
+                if (p.getName().trim().toLowerCase().contains(name.trim().toLowerCase())) { // watch for trims
+                    matched.add(p);
+                }
             }
         }
         return matched;
     }
 
-    public void chooseIdOrName() { //TODO make into menu
-        String[] options = {"Search by name", "Use Id"};
-        int option = Interface.getOption("Select a number:", options);
-        switch (option) {
-            case 1 -> enterName();
-            case 2 -> enterId();
-        }
-    }
-
-    public void enterId() { //TODO promptGetPassengerById return passenger and pass into goToMenu...()
+    public Passenger promptEnterId() { //TODO promptGetPassengerById return passenger and pass into goToMenu...()
         System.out.println("Please enter your Id:");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        Passenger passenger = getById(input);
-        if (passenger == null) {
-            System.out.println("Cannot find passenger with that Id");
-            chooseIdOrName();
-        } else {
-            flightService.bookOrDisplay(passenger);
+        Passenger p = getById(input);
+        if (p == null) {
+            System.out.println("No Users found matching Id");
         }
+        return p;
     }
 
-    public void enterName() { //TODO promptGetPassengerByName return passenger and pass into goToMenu...()
+    public Passenger promptEnterName() { //TODO promptGetPassengerByName return passenger and pass into goToMenu...()
         System.out.println("Please enter your name:");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         List<Passenger> filteredList = filterByName(input);
         if (filteredList.size() == 0) {
-            System.out.println("No matches found for " + input);
+            System.out.println("No Users found");
+            return null;
         } else {
-            String[] arr = new String[filteredList.size()];
+            String[] options = new String[filteredList.size() + 1];
             for (int i = 0; i < filteredList.size(); i++) {
-                arr[i] = formatPassenger(filteredList.get(i));
+                options[i] = formatPassenger(filteredList.get(i));
             }
-            int option = Interface.getOption("Choose a passenger from the list below:", arr);
-            Passenger passenger = filteredList.get(option - 1);
-            flightService.bookOrDisplay(passenger);
+            options[filteredList.size()] = "Back";
+            int option = Interface.getOption("Choose a passenger from the list below:", options);
+            if (option <= filteredList.size()) {
+                return filteredList.get(option - 1);
+            }
+            return null;
         }
     }
 
@@ -76,16 +73,16 @@ public record PassengerService(PassengerDao passengerDao, FlightService flightSe
 
         System.out.println("Please enter your full name:");
         Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
+        String name = scanner.nextLine().trim();
 
         System.out.println("Please enter your email:");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
 
         System.out.println("Please enter your phone number");
-        String phoneNum = scanner.nextLine();
+        String phoneNum = scanner.nextLine().trim();
 
         System.out.println("Please enter your passport number:");
-        String passportNum = scanner.nextLine();
+        String passportNum = scanner.nextLine().trim();
 
         Passenger passenger = new Passenger(id, name, email, phoneNum, passportNum);
 
