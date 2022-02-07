@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public record FlightService(FlightDao flightDao) {
 
-    public void addFlight() { // TODO use getInput methods
+    public void promptAddFlight() { // TODO use getInput methods
         System.out.println("Flight Code?");
 
         Scanner scanner = new Scanner(System.in);
@@ -32,7 +32,7 @@ public record FlightService(FlightDao flightDao) {
             case "7" -> destination = Destination.PRG;
             default -> {
                 System.out.println("Not a valid choice.");
-                addFlight();
+                promptAddFlight();
             }
         }
 
