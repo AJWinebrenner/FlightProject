@@ -5,76 +5,90 @@ import flight.FlightDao;
 import passenger.PassengerDao;
 import passenger.PassengerService;
 
-import java.util.Scanner;
-
 public class Main {
+
+    static FlightDao flightDao = new FlightDao();
+    static PassengerDao passengerDao = new PassengerDao();
+    static FlightService flightService = new FlightService(flightDao);
+    static IdGenerator idGenerator = new IdGenerator();
+    static PassengerService passengerService = new PassengerService(passengerDao, flightService, idGenerator);
+
 
     public static void main(String[] args) {
 
-        FlightDao flightDao = new FlightDao();
-        PassengerDao passengerDao = new PassengerDao();
-        FlightService flightService = new FlightService(flightDao);
-        IdGenerator idGenerator = new IdGenerator();
-        PassengerService passengerService = new PassengerService(passengerDao, flightService, idGenerator);
-
-        ////////////////////////////////////////////////////////
-
-        System.out.println("Welcome to the Flight Booking CLI!");
+        System.out.println("Welcome to the Flight Management CLI!");
 
         String[] options = {
-                "Add a flight",
-                "Display all flights",
-                "Display fully-booked flights",
-                "Create a new user",
-                "Display flight or book flight for a specific user",
-                "Cancel flight",
+                "Manage Flights",
+                "Manage Passengers",
                 "Quit the program"
         };
 
         while (true) {
 
-            int option = Interface.getOption("Please select your option using the numbers:",
-                    options);
+            System.out.println("/////Main Menu/////");
+
+            int option = Interface.getOption("Enter a number:", options);
 
             // Switch statements here
             switch (option) {
-                case 1 -> {
-                    System.out.println("'Add flight' selected.");
-                    flightService.addFlight();
-                }
-                case 2 -> {
-                    System.out.println("'Display all flights' selected.");
-                    flightService.displayAllFlights();
-                }
+                case 1 -> manageFlights();
+                case 2 -> managePassengers();
                 case 3 -> {
-                    System.out.println("'Display fully-booked flights' selected.");
-                    flightService.displayFullyBooked();
-                }
-                case 4 -> {
-                    System.out.println("'Create a new user' selected.");
-                    passengerService.promptCreateNewUser();
-                }
-                case 5 -> {
-                    System.out.println("'Display flight or book a flight for a specific user' selected.");
-                    passengerService.chooseIdOrName();
-                }
-                case 6 -> {
-                    System.out.println("'Cancel a flight' selected.");
-                    flightService.PromptCancelFlight();
-                }
-                case 7 -> {
                     System.out.println("Thanks for using our management system!");
                     System.exit(0);
                 }
             }
-            Interface.pause();
         }
     }
 
-    //menus
+    private static void manageFlights() {
+        String[] options = {
+                "Add a flight",
+                "Display all flights",
+                "Display fully-booked flights",
+                "Cancel flight",
+                "Back"
+        };
 
+        while (true) {
+            int option = Interface.getOption("/////Manage Flights/////", options);
+            boolean back = false;
+            switch (option) {
+                case 1 -> flightService.promptAddFlight();
+                case 2 -> flightService.displayAllFlights();
+                case 3 -> flightService.displayFullyBooked();
+                case 4 -> flightService.PromptCancelFlight();
+                case 5 -> back = true;
+            }
+            if (back) {
+                break;
+            }
+        }
+    }
 
+    private static void managePassengers() {
+        String[] options = {
+                "Create a new user",
+                "Manage specific user",
+                "Back"
+        };
+
+        while (true) {
+            int option = Interface.getOption("/////Manage Passengers/////", options);
+            boolean back = false;
+            switch (option) {
+                case 1 -> passengerService.promptCreateNewUser();
+                case 2 -> passengerService.chooseIdOrName();
+                case 3 -> back = true;
+            }
+            if (back) {
+                break;
+            }
+        }
+    }
 }
+
 
 
 

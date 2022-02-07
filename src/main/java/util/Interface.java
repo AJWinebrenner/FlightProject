@@ -8,7 +8,7 @@ public class Interface {
         Scanner scan = new Scanner(System.in);
         System.out.println(message);
         for (int i = 1; i <= options.length; i++) {
-            System.out.println(i + ". " + options[i-1]);
+            System.out.println(i + ") " + options[i-1]);
         }
         while(true) {
             try {
