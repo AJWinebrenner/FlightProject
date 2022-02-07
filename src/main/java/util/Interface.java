@@ -25,6 +25,12 @@ public class Interface {
         }
     }
 
+    public static void pause() {
+        System.out.println("Press enter to continue.");
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextLine();
+    }
+
 }
 
 

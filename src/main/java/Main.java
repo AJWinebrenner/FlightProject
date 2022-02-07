@@ -67,9 +67,7 @@ public class Main {
                     System.exit(0);
                 }
             }
-            System.out.println("Press enter to continue.");
-            Scanner scanner = new Scanner(System.in);
-            scanner.nextLine();
+            Interface.pause();
         }
     }
 
