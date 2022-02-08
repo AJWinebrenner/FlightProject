@@ -79,7 +79,7 @@ public record FlightService(FlightDao flightDao) {
         }
     }
 
-    public void displayFlights(List<Flight> flights) { // TODO display list arg
+    public void displayFlights(List<Flight> flights) {
         for (Flight flight : flights) {
             System.out.println("--------------------");
             System.out.println(formatFlight(flight));
