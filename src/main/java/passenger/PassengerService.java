@@ -11,8 +11,8 @@ import java.util.Scanner;
 
 public record PassengerService(PassengerDao passengerDao, FlightService flightService, IdGenerator idGenerator) {
 
-    public Passenger getById(String id) {
-        for (Passenger p : passengerDao.getAllPassengers()) {
+    public Passenger getById(String id, List<Passenger> passengers) {
+        for (Passenger p : passengers) {
             if (id.trim().equalsIgnoreCase(p.getId())) {
                 return p;
             }
@@ -20,11 +20,10 @@ public record PassengerService(PassengerDao passengerDao, FlightService flightSe
         return null;
     }
 
-    public List<Passenger> filterByName(String name) { //TODO use index numbers to ref allPassengers in a list (return Int)
-        List<Passenger> allPassengers = passengerDao.getAllPassengers();
+    public List<Passenger> filterByName(String name, List<Passenger> passengers) {
         List<Passenger> matched = new ArrayList<>();
-        if (allPassengers.size() > 0) {
-            for (Passenger p : allPassengers) {
+        if (passengers.size() > 0) {
+            for (Passenger p : passengers) {
                 if (p.getName().trim().toLowerCase().contains(name.trim().toLowerCase())) { // watch for trims
                     matched.add(p);
                 }
@@ -33,22 +32,22 @@ public record PassengerService(PassengerDao passengerDao, FlightService flightSe
         return matched;
     }
 
-    public Passenger promptEnterId() { //TODO promptGetPassengerById return passenger and pass into goToMenu...()
+    public Passenger promptEnterId() {
         System.out.println("Please enter your Id:");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        Passenger p = getById(input);
+        Passenger p = getById(input, passengerDao.getAllPassengers());
         if (p == null) {
             System.out.println("No Users found matching Id");
         }
         return p;
     }
 
-    public Passenger promptEnterName() { //TODO promptGetPassengerByName return passenger and pass into goToMenu...()
+    public Passenger promptEnterName() { // TODO prompt filter menu (name, email, passport)
         System.out.println("Please enter your name:");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        List<Passenger> filteredList = filterByName(input);
+        List<Passenger> filteredList = filterByName(input, passengerDao.getAllPassengers());
         if (filteredList.size() == 0) {
             System.out.println("No Users found");
             return null;
