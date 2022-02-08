@@ -25,6 +25,18 @@ public class Interface {
         }
     }
 
+    public static String getInput(String message, String regex) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println(message);
+        while(true) {
+            String input = scan.nextLine();
+            if (input.equals("") || input.matches(regex)) {
+                return input;
+            }
+            System.out.println(input + " is invalid");
+        }
+    }
+
     public static void pause() {
         System.out.println("Press enter to continue.");
         Scanner scanner = new Scanner(System.in);
