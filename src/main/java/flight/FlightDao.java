@@ -103,10 +103,10 @@ public class FlightDao {
                 int count = 0;
                 int index = 0;
 
-                // TODO update to loop through characters more efficiently
-                String[] arr1 = info.split("");
-                for (int i = 0; i < arr1.length; i++) {
-                    if (arr1[i].equals(",")) {
+                // find third comma to split info around
+                for (int i = 0; i < info.length(); i++) {
+                    char c = info.charAt(i);
+                    if (c == ',') {
                         count++;
                     }
                     if (count == 3) {
