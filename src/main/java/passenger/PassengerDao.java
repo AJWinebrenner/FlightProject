@@ -25,8 +25,7 @@ public class PassengerDao {
     public List<Passenger> getAllPassengers() {
         // make sure file exists
         try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.createNewFile()) {
                 System.out.println("Empty DB created!");
             }
         } catch (IOException e) {
@@ -56,10 +55,9 @@ public class PassengerDao {
 //    }
 
     public void updateAllPassengers(List<Passenger> allPassengers) {
-        //make sure file exists
+        // make sure file exists
         try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.createNewFile()) {
                 System.out.println("Empty DB created!");
             }
         } catch (IOException e) {

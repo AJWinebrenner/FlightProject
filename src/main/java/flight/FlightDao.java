@@ -84,8 +84,7 @@ public class FlightDao {
     public List<Flight> getAllFlights() {
         // make sure file exists
         try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.createNewFile()) {
                 System.out.println("Empty DB created!");
             }
         } catch (IOException e) {
@@ -161,10 +160,9 @@ public class FlightDao {
 */
 
     public void updateAllFlights(List<Flight> allFlights){
-        //make sure file exists
+        // make sure file exists
         try {
-            if (!file.exists()) {
-                file.createNewFile();
+            if (file.createNewFile()) {
                 System.out.println("Empty DB created!");
             }
         } catch (IOException e) {
