@@ -50,10 +50,6 @@ public class PassengerDao {
         return allPassengers;
     }
 
-//    public List<Passenger> getAllPassengers() {
-//        return allPassengers;
-//    }
-
     public void updateAllPassengers(List<Passenger> allPassengers) {
         // make sure file exists
         try {

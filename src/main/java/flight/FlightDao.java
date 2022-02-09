@@ -152,13 +152,6 @@ public class FlightDao {
         return allFlights;
     }
 
-    //Legacy internal list only
-/*
-    public List<Flight> getAllFlights() {
-        return allFlights;
-    }
-*/
-
     public void updateAllFlights(List<Flight> allFlights){
         // make sure file exists
         try {
