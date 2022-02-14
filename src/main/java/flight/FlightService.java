@@ -14,7 +14,11 @@ public record FlightService(FlightDao flightDao) {
         System.out.println("Flight Code?");
 
         Scanner scanner = new Scanner(System.in);
-        String flightCode = scanner.nextLine();
+        //String flightCode = scanner.nextLine();
+
+        String flightCode = Interface.getInput("Please enter Flight Code", "^[A-Z0-9]{2}\\d{1,4}$");
+
+        //Destination destination = Interface.getOption("Please choose a destination", Destination.values())
 
         // TODO replace all with destination search
         System.out.println("Destination?\n1. Germany\n2. China\n3. France\n4. Denmark\n5. UAE\n6. USA\n7. Czech Republic");
