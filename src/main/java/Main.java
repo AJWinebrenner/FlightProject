@@ -58,7 +58,7 @@ public class Main {
             switch (option) {
                 case 1 -> flightService.promptAddFlight();
                 case 2 -> flightService.displayFlights(flightDao.getAllFlights());
-                case 3 -> flightService.displayFullyBooked();
+                case 3 -> flightService.displayFullyBooked(flightDao.getAllFlights());
                 case 4 -> flightService.promptCancelFlight();
                 case 5 -> back = true;
             }
@@ -69,7 +69,7 @@ public class Main {
         String[] options = {
                 "Create a new user",
                 "Manage specific user by Id",
-                "Manage specific user by name", //TODO change to search user (any field)
+                "Search for specific user", //TODO change to go to search user options (any field)
                 "Back"
         };
 
@@ -89,7 +89,7 @@ public class Main {
     public static void ManageUser(Passenger p) {
         if (p == null) return;
 
-        String[] options = {
+        String[] options = { // TODO add cancel a booking
                 "Book a flight for " + p.getName(),
                 "Display booked flights for " + p.getName(),
                 "Back"

@@ -88,9 +88,9 @@ public record FlightService(FlightDao flightDao) {
         Interface.pause();
     }
 
-    public void displayFullyBooked() {
+    public void displayFullyBooked(List<Flight> flights) {
         System.out.println("Fully booked flights:");
-        for (Flight flight : flightDao.getAllFlights()) {
+        for (Flight flight : flights) {
             if (getAvailableSeats(flight) == 0) {
                 System.out.println("--------------------");
                 System.out.println(formatFlight(flight));
@@ -170,12 +170,12 @@ public record FlightService(FlightDao flightDao) {
 
 
 
-    public void promptBookFlight(Passenger p) {
+    public void promptBookFlight(Passenger passenger) {
         // get available flights TODO replace with filter
         List<Flight> allFlights = flightDao.getAllFlights();
         List<Flight> availableFlights = new ArrayList<>();
         for (Flight f : allFlights) {
-            if (getAvailableSeats(f) > 0 && !isOnFlight(p, f)) {
+            if (getAvailableSeats(f) > 0 && !isOnFlight(passenger, f)) {
                 availableFlights.add(f);
             }
         }
@@ -201,9 +201,9 @@ public record FlightService(FlightDao flightDao) {
                 String code = filterCodes.get(option - 1);
                 Flight f = getFlightByCode(code, availableFlights);
                 if (f != null){
-                    addPassengerToFlight(p, f);
+                    addPassengerToFlight(passenger, f);
                     flightDao.updateAllFlights(allFlights);
-                    System.out.println("Flight booked for " + p.getName() + "!");
+                    System.out.println("Flight booked for " + passenger.getName() + "!");
                 } else {
                     System.out.println("cannot find flight");
                 }
