@@ -11,8 +11,8 @@ public class Main {
     static FlightDao flightDao = new FlightDao();
     static PassengerDao passengerDao = new PassengerDao();
     static FlightService flightService = new FlightService(flightDao);
-    static IdGenerator idGenerator = new IdGenerator();
-    static PassengerService passengerService = new PassengerService(passengerDao, flightService, idGenerator);
+    static IdGenerator idGenerator = new IdGenerator(); // TODO incorporate into tools
+    static PassengerService passengerService = new PassengerService(passengerDao, idGenerator);
 
 
     public static void main(String[] args) {

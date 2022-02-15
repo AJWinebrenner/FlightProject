@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
-public record PassengerService(PassengerDao passengerDao, FlightService flightService, IdGenerator idGenerator) {
+public record PassengerService(PassengerDao passengerDao, IdGenerator idGenerator) {
 
     public Passenger getById(String id, List<Passenger> passengers) {
         for (Passenger p : passengers) {
