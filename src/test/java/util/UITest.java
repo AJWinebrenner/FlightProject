@@ -6,9 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-class InterfaceTest {
+class UITest {
 
     @Test
     void getOptionTest() {
@@ -22,7 +21,7 @@ class InterfaceTest {
         // When
         InputStream in = new ByteArrayInputStream(console.getBytes());
         System.setIn(in);
-        int actual = Interface.getOption("get option", options);
+        int actual = UI.getOption("get option", options);
         // Then
         int expected = 3;
         assertThat(actual).isEqualTo(expected);
@@ -35,7 +34,7 @@ class InterfaceTest {
         // When
         InputStream in = new ByteArrayInputStream(console.getBytes());
         System.setIn(in);
-        String actual = Interface.getInput("get input", "^[A-Z0-9]{2}\\d{1,4}$");
+        String actual = UI.getInput("get input", "^[A-Z0-9]{2}\\d{1,4}$");
         // Then
         String expected = "AA1234";
         assertThat(actual).isEqualTo(expected);

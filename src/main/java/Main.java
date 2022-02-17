@@ -1,5 +1,5 @@
-import util.IdGenerator;
-import util.Interface;
+import util.Tools;
+import util.UI;
 import flight.FlightDao;
 import flight.FlightFileDao;
 import flight.FlightService;
@@ -13,8 +13,7 @@ public class Main {
     static FlightDao flightDao = new FlightFileDao("FlightDB.txt");
     static PassengerDao passengerDao = new PassengerFileDao("PassengerDB.txt");
     static FlightService flightService = new FlightService(flightDao);
-    static IdGenerator idGenerator = new IdGenerator(); // TODO incorporate into tools
-    static PassengerService passengerService = new PassengerService(passengerDao, idGenerator);
+    static PassengerService passengerService = new PassengerService(passengerDao);
 
 
     public static void main(String[] args) {
@@ -31,7 +30,7 @@ public class Main {
         do {
             System.out.println("----- Main Menu -----");
 
-            int option = Interface.getOption("Enter a number:", options);
+            int option = UI.getOption("Enter a number:", options);
             back = false;
             // Switch statements here
             switch (option) {
@@ -55,7 +54,7 @@ public class Main {
 
         boolean back;
         do {
-            int option = Interface.getOption("----- Manage Flights -----", options);
+            int option = UI.getOption("----- Manage Flights -----", options);
             back = false;
             switch (option) {
                 case 1 -> flightService.promptAddFlight();
@@ -77,7 +76,7 @@ public class Main {
 
         boolean back;
         do {
-            int option = Interface.getOption("----- Manage Passengers -----", options);
+            int option = UI.getOption("----- Manage Passengers -----", options);
             back = false;
             switch (option) {
                 case 1 -> passengerService.promptCreateNewUser();
@@ -99,7 +98,7 @@ public class Main {
 
         boolean back;
         do {
-            int option = Interface.getOption("----- Manage User: " + p.getId() + " -----", options);
+            int option = UI.getOption("----- Manage User: " + p.getId() + " -----", options);
             back = false;
             switch (option) {
                 case 1 -> flightService.promptBookFlight(p);

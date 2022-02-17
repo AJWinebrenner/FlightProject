@@ -5,10 +5,9 @@ import passenger.Passenger;
 import java.util.List;
 import java.util.Random;
 
-public class IdGenerator {
+public class Tools {
 
-
-    public String randomIdGenerator(List<Passenger> p){
+    public static String randomIdGenerator(List<Passenger> p){
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
         Random random = new Random();
         StringBuilder randomString = new StringBuilder();
@@ -21,7 +20,7 @@ public class IdGenerator {
             for (int i = 0; i < 6; i++) {
                 randomString.append(characters.charAt(random.nextInt(characters.length())));
             }
-            // compare with existing ids, if duplicate repeat again
+            // compare with existing ids, if duplicate repeat
             for (Passenger passenger : p) {
                 if (randomString.toString().equalsIgnoreCase(passenger.getId())) {
                     duplicate = true;

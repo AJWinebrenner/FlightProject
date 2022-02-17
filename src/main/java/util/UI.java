@@ -2,7 +2,7 @@ package util;
 
 import java.util.Scanner;
 
-public class Interface {
+public class UI {
 
     public static int getOption(String message, String[] options) {
         Scanner scan = new Scanner(System.in);

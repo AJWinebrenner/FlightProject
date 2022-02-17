@@ -1,7 +1,7 @@
 package flight;
 
 import passenger.Passenger;
-import util.Interface;
+import util.UI;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,15 +10,32 @@ import java.util.Scanner;
 
 public record FlightService(FlightDao flightDao) {
 
+    public static String formatFlight(Flight flight) {
+        if (flight != null) {
+            return flight.getFlightCode() + " | " + "Destination: " + flight.getDestination() + " | " + "Departure time: " + flight.getDepartureTime() + " | " + "Available seats: " + getAvailableSeats(flight);
+        } else {
+            return "There's nothing here";
+        }
+    }
+
+    public Flight getFlightByCode(String code, List<Flight> flights) {
+        for (Flight f : flights) {
+            if (code.equalsIgnoreCase(f.getFlightCode())) {
+                return f;
+            }
+        }
+        return null;
+    }
+
     public void promptAddFlight() { // TODO use getInput methods
         System.out.println("Flight Code?");
 
         Scanner scanner = new Scanner(System.in);
         //String flightCode = scanner.nextLine();
 
-        String flightCode = Interface.getInput("Please enter Flight Code", "^[A-Z0-9]{2}\\d{1,4}$");
+        String flightCode = UI.getInput("Please enter Flight Code", "^[A-Z0-9]{2}\\d{1,4}$");
 
-        //Destination destination = Interface.getOption("Please choose a destination", Destination.values())
+        //Destination destination = UI.getOption("Please choose a destination", Destination.values())
 
         // TODO replace all with destination search
         System.out.println("Destination?\n1. Germany\n2. China\n3. France\n4. Denmark\n5. UAE\n6. USA\n7. Czech Republic");
@@ -64,7 +81,6 @@ public record FlightService(FlightDao flightDao) {
         flightDao.updateAllFlights(allFlights);
     }
 
-    // All flights
     public static int getAvailableSeats(Flight flight) {
         int counter = 0;
         for (String passenger : flight.getPassengerIds()) {
@@ -75,21 +91,13 @@ public record FlightService(FlightDao flightDao) {
         return counter;
     }
 
-    public static String formatFlight(Flight flight) {
-        if (flight != null) {
-            return flight.getFlightCode() + " | " + "Destination: " + flight.getDestination() + " | " + "Departure time: " + flight.getDepartureTime() + " | " + "Available seats: " + getAvailableSeats(flight);
-        } else {
-            return "There's nothing here";
-        }
-    }
-
     public void displayFlights(List<Flight> flights) {
         for (Flight flight : flights) {
             System.out.println("--------------------");
             System.out.println(formatFlight(flight));
         }
         System.out.println("--------------------");
-        Interface.pause();
+        UI.pause();
     }
 
     public void displayFullyBooked(List<Flight> flights) {
@@ -101,7 +109,7 @@ public record FlightService(FlightDao flightDao) {
             }
         }
         System.out.println("--------------------");
-        Interface.pause();
+        UI.pause();
     }
 
     public void addPassengerToFlight(Passenger passenger, Flight flight) {
@@ -136,15 +144,6 @@ public record FlightService(FlightDao flightDao) {
         displayFlights(onboard);
     }
 
-    public Flight getFlightByCode(String code, List<Flight> flights) {
-        for (Flight f : flights) {
-            if (code.equalsIgnoreCase(f.getFlightCode())) {
-                return f;
-            }
-        }
-        return null;
-    }
-
     public void promptCancelFlight() { //TODO filter stores flight codes
         List<Flight> allFlights = flightDao.getAllFlights();
         List<String> filterCodes = new ArrayList<>(); // TODO replace with filter (currently does all)
@@ -161,7 +160,7 @@ public record FlightService(FlightDao flightDao) {
         options[filterCodes.size()] = "back";
 
         // cancel the flight chosen and save list
-        int option = Interface.getOption("Pick an available flight below:", options);
+        int option = UI.getOption("Pick an available flight below:", options);
         if (option <= filterCodes.size()) {
             String code = filterCodes.get(option - 1);
             // TODO if (getInput("Type code to confirm:", "[A-Za-z0-9]+") == code);
@@ -171,8 +170,6 @@ public record FlightService(FlightDao flightDao) {
 
         }
     }
-
-
 
     public void promptBookFlight(Passenger passenger) {
         // get available flights TODO replace with filter
@@ -200,7 +197,7 @@ public record FlightService(FlightDao flightDao) {
             options[filterCodes.size()] = "Back";
 
             // book a flight and save list
-            int option = Interface.getOption("Pick an available flight below:", options);
+            int option = UI.getOption("Pick an available flight below:", options);
             if (option <= filterCodes.size()) {
                 String code = filterCodes.get(option - 1);
                 Flight f = getFlightByCode(code, availableFlights);

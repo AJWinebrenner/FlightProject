@@ -1,7 +1,5 @@
 package passenger;
 
-import util.IdGenerator;
-
 import java.util.Objects;
 
 public class Passenger {
@@ -82,7 +80,7 @@ public class Passenger {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Passenger passenger = (Passenger) o;
-        return id == passenger.id && Objects.equals(name, passenger.name) && Objects.equals(email, passenger.email) && Objects.equals(phoneNumber, passenger.phoneNumber) && Objects.equals(passport, passenger.passport);
+        return Objects.equals(id, passenger.id) && Objects.equals(name, passenger.name) && Objects.equals(email, passenger.email) && Objects.equals(phoneNumber, passenger.phoneNumber) && Objects.equals(passport, passenger.passport);
     }
 
     @Override

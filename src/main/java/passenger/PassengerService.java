@@ -1,15 +1,17 @@
 package passenger;
 
-import flight.FlightService;
-import util.IdGenerator;
-import util.Interface;
+import util.Tools;
+import util.UI;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
-public record PassengerService(PassengerDao passengerDao, IdGenerator idGenerator) {
+public record PassengerService(PassengerDao passengerDao) {
+
+    public String formatPassenger(Passenger p) {
+        return p.getId() + " | " + p.getName() + " | " + p.getEmail() + " | " + p.getPassport();
+    }
 
     public Passenger getById(String id, List<Passenger> passengers) {
         for (Passenger p : passengers) {
@@ -57,7 +59,7 @@ public record PassengerService(PassengerDao passengerDao, IdGenerator idGenerato
                 options[i] = formatPassenger(filteredList.get(i));
             }
             options[filteredList.size()] = "Back";
-            int option = Interface.getOption("Choose a passenger from the list below:", options);
+            int option = UI.getOption("Choose a passenger from the list below:", options);
             if (option <= filteredList.size()) {
                 return filteredList.get(option - 1);
             }
@@ -68,7 +70,7 @@ public record PassengerService(PassengerDao passengerDao, IdGenerator idGenerato
     public void promptCreateNewUser() {
 
         List<Passenger> allPassengers = passengerDao.getAllPassengers();
-        String id = idGenerator.randomIdGenerator(allPassengers);
+        String id = Tools.randomIdGenerator(allPassengers);
 
         System.out.println("Please enter your full name:");
         Scanner scanner = new Scanner(System.in);
@@ -91,8 +93,5 @@ public record PassengerService(PassengerDao passengerDao, IdGenerator idGenerato
         System.out.println(name + " created! Your ID is " + id);
     }
 
-    public String formatPassenger(Passenger p) {
-        return p.getId() + " | " + p.getName() + " | " + p.getEmail() + " | " + p.getPassport();
-    }
 }
 
