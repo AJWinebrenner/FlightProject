@@ -58,8 +58,14 @@ public class Main {
             back = false;
             switch (option) {
                 case 1 -> flightService.promptAddFlight();
-                case 2 -> flightService.displayFlights(flightDao.getAllFlights());
-                case 3 -> flightService.displayFullyBooked(flightDao.getAllFlights());
+                case 2 -> flightService.displayFlights(
+                        "All flights:",
+                        flightDao.getAllFlights()
+                );
+                case 3 -> flightService.displayFlights(
+                        "Fully booked flights:",
+                        flightService.getFullyBooked(flightDao.getAllFlights())
+                );
                 case 4 -> flightService.promptCancelFlight();
                 case 5 -> back = true;
             }
@@ -102,7 +108,10 @@ public class Main {
             back = false;
             switch (option) {
                 case 1 -> flightService.promptBookFlight(p);
-                case 2 -> flightService.displayPassengerFlights(p);
+                case 2 -> flightService.displayFlights(
+                    "Flights for " + p.getName() + ":",
+                    flightService.getPassengerFlights(p)
+                );
                 case 3 -> back = true;
             }
         } while (!back);

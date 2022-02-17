@@ -91,7 +91,8 @@ public record FlightService(FlightDao flightDao) {
         return counter;
     }
 
-    public void displayFlights(List<Flight> flights) {
+    public void displayFlights(String message, List<Flight> flights) {
+        System.out.println(message);
         for (Flight flight : flights) {
             System.out.println("--------------------");
             System.out.println(formatFlight(flight));
@@ -100,16 +101,17 @@ public record FlightService(FlightDao flightDao) {
         UI.pause();
     }
 
-    public void displayFullyBooked(List<Flight> flights) {
-        System.out.println("Fully booked flights:");
+    public List<Flight> getFullyBooked(List<Flight> flights) {
+        List<Flight> booked = new ArrayList<>();
         for (Flight flight : flights) {
             if (getAvailableSeats(flight) == 0) {
-                System.out.println("--------------------");
-                System.out.println(formatFlight(flight));
+                booked.add(flight);
             }
         }
-        System.out.println("--------------------");
-        UI.pause();
+        if (booked.size() == 0) {
+            booked.add(null);
+        }
+        return booked;
     }
 
     public void addPassengerToFlight(Passenger passenger, Flight flight) {
@@ -130,18 +132,17 @@ public record FlightService(FlightDao flightDao) {
         return false;
     }
 
-    public void displayPassengerFlights(Passenger passenger) {
+    public List<Flight> getPassengerFlights(Passenger passenger) {
         List<Flight> onboard = new ArrayList<>();
         for (Flight flight : flightDao.getAllFlights()) {
             if (isOnFlight(passenger, flight)) {
                 onboard.add(flight);
             }
         }
-        System.out.println("Flights for " + passenger.getName() + ":");
         if (onboard.size() == 0) {
             onboard.add(null);
         }
-        displayFlights(onboard);
+        return onboard;
     }
 
     public void promptCancelFlight() { //TODO filter stores flight codes
