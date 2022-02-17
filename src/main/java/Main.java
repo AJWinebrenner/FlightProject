@@ -1,15 +1,17 @@
-import passenger.Passenger;
 import util.IdGenerator;
 import util.Interface;
-import flight.FlightService;
 import flight.FlightDao;
+import flight.FlightFileDao;
+import flight.FlightService;
+import passenger.Passenger;
 import passenger.PassengerDao;
+import passenger.PassengerFileDao;
 import passenger.PassengerService;
 
 public class Main {
 
-    static FlightDao flightDao = new FlightDao();
-    static PassengerDao passengerDao = new PassengerDao();
+    static FlightDao flightDao = new FlightFileDao("FlightDB.txt");
+    static PassengerDao passengerDao = new PassengerFileDao("PassengerDB.txt");
     static FlightService flightService = new FlightService(flightDao);
     static IdGenerator idGenerator = new IdGenerator(); // TODO incorporate into tools
     static PassengerService passengerService = new PassengerService(passengerDao, idGenerator);
