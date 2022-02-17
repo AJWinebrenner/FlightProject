@@ -2,8 +2,7 @@ package util;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,12 +39,4 @@ class UITest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    void pauseTest() {
-        // Given
-
-        // When
-
-        // Then
-    }
 }
